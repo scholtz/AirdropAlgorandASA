@@ -39,7 +39,7 @@ namespace AirdropAlgorandASA
 
             var allTxs = await GetTxsFromIndexerAsync(indexerS, config, asset.Asset.CreatedAtRound.Value);
             ProcessTxs(allTxs);
-            Console.WriteLine($"Stats: OptedIn {processed.Where(kv => kv.Value == false).Count()} Droped {processed.Where(kv => kv.Value == true).Count()}");
+            Console.WriteLine($"Stats: OptedIn {processed.Where(kv => kv.Value == false).Count()} Droped {processed.Where(kv => kv.Value == true).Count()} Total {processed.Count} ");
             foreach (var item in processed.Where(kv => kv.Value == false))
             {
                 // drop
@@ -103,9 +103,11 @@ namespace AirdropAlgorandASA
             return allTxs;
         }
 
-
+        static Dictionary<string, int> Errors = new Dictionary<string, int>();
         static async Task DropAsync(DefaultApi algod, Algorand.Algod.Model.Account sendFrom, Address dropTo, ulong asset, Algorand.Algod.Model.TransactionParametersResponse param)
         {
+            var adr = dropTo.ToString();
+            if (Errors.ContainsKey(adr) && Errors[adr] > 10) { return; }
             try
             {
                 var tx = new AssetTransferTransaction()
@@ -129,7 +131,9 @@ namespace AirdropAlgorandASA
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                await Task.Delay(1000);
+                await Task.Delay(3000);
+                if (!Errors.ContainsKey(adr)) Errors[adr] = 0;
+                Errors[adr]++;
             }
         }
     }
