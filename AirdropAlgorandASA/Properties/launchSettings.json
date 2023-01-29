@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "AirdropAlgorandASA": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
