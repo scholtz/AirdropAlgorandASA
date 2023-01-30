@@ -55,7 +55,7 @@ namespace AirdropAlgorandASA
 
                     var newTxs = await GetTxsFromIndexerAsync(indexerS, config, round - 10);
                     ProcessTxs(newTxs);
-                    Console.WriteLine($"{round} Stats: OptedIn {processed.Where(kv => kv.Value == false).Count()} Droped {processed.Where(kv => kv.Value == true).Count()}");
+                    Console.WriteLine($"{round} Stats: OptedIn {processed.Where(kv => kv.Value == false).Count()} Droped {processed.Where(kv => kv.Value == true).Count()} Total {processed.Count}");
                     foreach (var item in processed.Where(kv => kv.Value == false))
                     {
                         // drop
