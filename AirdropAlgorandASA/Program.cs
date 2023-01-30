@@ -128,9 +128,9 @@ namespace AirdropAlgorandASA
                 //var resp = await Utils.WaitTransactionToComplete(algod, id.Txid);
                 Console.WriteLine(id.Txid);
             }
-            catch (Exception ex)
+            catch (Algorand.ApiException<Algorand.Algod.Model.ErrorResponse> ex)
             {
-                Console.WriteLine(ex.ToString());
+                Console.WriteLine($"{dropTo} {ex.Result?.Message} {ex.Result?.Data} {ex.ToString()}");
                 await Task.Delay(3000);
                 if (!Errors.ContainsKey(adr)) Errors[adr] = 0;
                 Errors[adr]++;
