@@ -43,7 +43,7 @@ namespace AirdropAlgorandASA
             foreach (var item in processed.Where(kv => kv.Value == false))
             {
                 // drop
-                await DropAsync(algod, sendFrom, new Address(item.Key), config.Airdrop.Asset, param);
+                await DropAsync(algod, sendFrom, new Address(item.Key), config.Airdrop.Asset);
             }
 
             var round = param.LastRound;
@@ -59,7 +59,7 @@ namespace AirdropAlgorandASA
                     foreach (var item in processed.Where(kv => kv.Value == false))
                     {
                         // drop
-                        await DropAsync(algod, sendFrom, new Address(item.Key), config.Airdrop.Asset, param);
+                        await DropAsync(algod, sendFrom, new Address(item.Key), config.Airdrop.Asset);
                     }
                 }
                 catch (Exception ex)
@@ -104,8 +104,9 @@ namespace AirdropAlgorandASA
         }
 
         static Dictionary<string, int> Errors = new Dictionary<string, int>();
-        static async Task DropAsync(DefaultApi algod, Algorand.Algod.Model.Account sendFrom, Address dropTo, ulong asset, Algorand.Algod.Model.TransactionParametersResponse param)
+        static async Task DropAsync(DefaultApi algod, Algorand.Algod.Model.Account sendFrom, Address dropTo, ulong asset)
         {
+            var param = await algod.TransactionParamsAsync();
             var adr = dropTo.ToString();
             if (Errors.ContainsKey(adr) && Errors[adr] > 10) { return; }
             try
